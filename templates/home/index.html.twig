@@ -73,7 +73,8 @@
 								{% if columns is empty %}
 								Nothing to show...
 								{% else %}
-									<table class="table">
+								<div class="table-responsive" style="overflow: scroll; max-height: 400px;">
+									<table class="table table-reponsive">
 										<thead>
 											<tr>
 												{% for col in columns %}
@@ -83,14 +84,15 @@
 										</thead>
 										<tbody>
 											{% for row in rowData %}
-											<tr>
+											<tr scope="row">
 												{% for col in columns %}
-												<td scope="col">{{ row[loop.index -1] }}</th>
+												<td><small>{{ row[loop.index -1] }}</small></th>
 												{% endfor %}	
 											</tr>
 											{% endfor %}
 										</tbody>
 									</table>
+									</div>
 									<form action="/reset" method="post">
 										<button type="subject" class="btn btn-sm btn-danger">Clear</button>
 									</form>
