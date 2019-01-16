@@ -1,3 +1,7 @@
 swiftmailer:
-    url: '%env(MAILER_URL)%'
+    transport:        gmail
+    host:             smtp.gmail.com
+    port:             465
+    encryption:       tls
+    auth-mode:        login
     spool: { type: 'memory' }
