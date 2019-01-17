@@ -1,6 +1,6 @@
 # Mail Merge for Gmail
 
-A simple web application for sending customized email to multiple recipients. 
+A simple web application for sending customized email (mail merge) to multiple recipients using gmail. 
 Here is the steps to run the mail merge locally:
   - Install PHP and git 
   - Install PHP composer
