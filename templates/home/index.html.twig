@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container" id="mainApp">
+        <div class="row justify-content-center">
+            <div class="col-md-12" style="margin-top: 20px;">
+                {% for err in errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ err }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-6">
+                <div class="card-deck mb-3 mt-5">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">Mail Merge</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="mailForm" action="/preview" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" value="{{ name }}" name="name"
+                                           placeholder="Enter your name" v-model="form.name" required="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Your Email</label>
+                                    <input type="email" class="form-control" name="email" id="email"
+                                           aria-describedby="email" placeholder="Enter your email" value="{{ email }}"
+                                           required="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">App Password</label>
+                                    <input type="password" class="form-control" id="appPassword" placeholder="Password"
+                                           name="password" v-model="form.password" required="" value="{{ password }}">
+                                </div>
+                                {{ form_row(form.csvFile) }}
+                                <small id="emailHelp" class="form-text text-muted">First row should be the column
+                                    names.
+                                </small>
+
+                                {% if preview is defined and preview == true %}
+                                    <hr>
+                                    <div class="form-group">
+                                        <label for="subject">Subject</label>
+                                        <input type="text" class="form-control" id="subject" value="{{ subject }}"
+                                               name="subject" placeholder="Enter email subject" v-model="form.subject"
+                                               required="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Enter Your Message</label>
+                                        <div id="message-editor" style="height: 300px;">
+                                            {% if message is empty %}
+                                                <h3>Enter your message here.</h3>
+                                                <br>
+                                                <br>
+                                                <p>
+                                                    Use the column names of the csv file inside double curly bracets for
+                                                    templating.
+                                                </p>
+                                            {% else %}
+                                                {{ message | raw }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <input type="submit" id="previewAction" class="btn btn-success" name="preview"
+                                       value="Preview"/>
+                                <input type="submit" id="sendAction" class="btn btn-info" name="send" value="Send"/>
+                                <input type="submit" id="resetAction" class="btn btn-danger" name="reset"
+                                       value="Reset"/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-deck mb-3 mt-5">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">Uploaded Data</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if columns is empty %}
+                                Nothing to show...
+                            {% else %}
+                                <div class="table-responsive" style="overflow: scroll; max-height: 400px;">
+                                    <table class="table table-reponsive">
+                                        <thead>
+                                        <tr>
+                                            {% for col in columns %}
+                                                <th scope="col">{{ col }}</th>
+                                            {% endfor %}
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for row in rowData %}
+                                            <tr scope="row">
+                                                {% for col in columns %}
+                                                    <td>
+                                                        <small>{{ row[loop.index -1] }}</small></th>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <form action="/reset" method="post">
+                                    <button type="subject" class="btn btn-sm btn-danger">Clear</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Your Message Preview</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ template | raw }}
+
+                        {% if sent > 0 %}
+                            <hr>
+                            <div class="alert alert-success" role="alert">
+                                {{ sent }} email out of {{ rowData|length }} emails sent successfully.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
